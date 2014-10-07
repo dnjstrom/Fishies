@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys, pygame
+import time
 
 from vector import Vector
 from fish import Fish
@@ -13,7 +14,7 @@ brightBlue = pygame.Color(0, 0, 255)
 darkBlue = pygame.Color(0, 0, 180)
 
 def main():
-  window = pygame.display.set_mode((640, 480))
+  window = pygame.display.set_mode((1280, 960))
   pygame.display.set_caption('Fishies')
   width, height = window.get_size()
 
@@ -24,9 +25,12 @@ def main():
 
   clock = pygame.time.Clock()
 
-  waterLevel = 0.5
+  waterLevel = 0
 
   fish = Fish()
+
+  time.time()
+
 
   running = True
 

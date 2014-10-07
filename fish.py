@@ -56,8 +56,7 @@ class Fish(pygame.sprite.Sprite):
           can be any x,y value pair in
           brackets [x,y]
           or parentheses (x,y)
-    '''
-    Checks if the fish has 
+    ''' 
     dist_x = dist[0] ** 2 #gets absolut value of the x distance
     dist_y = dist[1] ** 2
     t_dist = dist_x + dist_y
