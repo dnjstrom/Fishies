@@ -29,13 +29,18 @@ def main():
 
   fish = Fish()
 
-  time.time()
-
 
   running = True
+  timer = 60
 
   while running:
     clock.tick(30)
+    timer -= 1
+
+    if timer <= 0:
+      fish.randomize_target()
+      timer = 60
+
 
     for event in pygame.event.get(): 
       if event.type == QUIT: 

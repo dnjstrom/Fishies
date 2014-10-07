@@ -12,7 +12,7 @@ class Fish(pygame.sprite.Sprite):
     self.target = None # next position
     self.max_distance = 500 # movement window
     self.min_distance = 0
-    self.speed = 10
+    self.speed = 1
     self.trueX = 100
     self.trueY = 100
 
