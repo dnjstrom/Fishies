@@ -49,6 +49,7 @@ def main():
           print event
 
     # Draw background
+    fish.update()
     window.blit(background, (0,0))
 
     # Draw waterlevel
