@@ -40,6 +40,9 @@ class Vector(object):
     else:
       return Vector(self.x / l, self.y / l)
 
+  def get_point(self):
+    return (self.x, self.y)
+
 
 def test_vector():
   v = Vector(3,4)

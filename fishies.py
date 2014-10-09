@@ -14,7 +14,7 @@ brightBlue = pygame.Color(0, 0, 255)
 darkBlue = pygame.Color(0, 0, 180)
 
 def main():
-  window = pygame.display.set_mode((1280, 960))
+  window = pygame.display.set_mode((700, 700))
   pygame.display.set_caption('Fishies')
   width, height = window.get_size()
 
