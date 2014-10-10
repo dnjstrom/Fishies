@@ -41,10 +41,10 @@ class Vector(object):
     return math.sqrt(self.x**2 + self.y**2)
 
   def angle(self):
-    if self.y == 0 and self.x == 0:
+    if self.length() == 0:
       return 0
     else:
-      return math.atan(self.y / self.x)
+      return math.asin(self.y / self.length())
 
   def normalize(self):
     l = self.length()
@@ -89,6 +89,9 @@ def test_vector():
   print y.rotate(math.pi/2)
   print Vector.make(math.pi, 5)
   print y.angle()
+  print "#####"
+  u = Vector(0,1)
+  print u.angle()
 
 if __name__ == "__main__":
   test_vector()
