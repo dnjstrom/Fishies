@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys, pygame
-import time
+import random
 
 from vector import Vector
 from fish import Fish
@@ -14,18 +14,22 @@ brightBlue = pygame.Color(0, 0, 255)
 darkBlue = pygame.Color(0, 0, 180)
 
 def main():
-  window = pygame.display.set_mode((700, 700))
+  window = pygame.display.set_mode((300, 300))
   pygame.display.set_caption('Fishies')
   width, height = window.get_size()
 
   background = pygame.Surface(window.get_size()).convert()
   background.fill(brightBlue)
 
+  water = pygame.Surface(window.get_size()).convert()
+  water.fill(darkBlue)
+  waterrect = water.get_rect()
+
   pygame.key.set_repeat(50, 50)
 
   clock = pygame.time.Clock()
 
-  waterLevel = 0
+  waterLevel = 1
 
   fish = Fish()
 
@@ -39,13 +43,11 @@ def main():
         sys.exit(0)
       elif event.type == KEYDOWN:
         if event.key == K_UP:
-          if waterLevel > 0:
-            waterLevel -= 0.01
-        elif event.key == K_DOWN:
           if waterLevel < 1:
             waterLevel += 0.01
-        elif event.key == K_SPACE:
-          fish.randomize_target()
+        elif event.key == K_DOWN:
+          if waterLevel > 0:
+            waterLevel -= 0.01
         else:
           print event
 
@@ -53,10 +55,12 @@ def main():
     window.blit(background, (0,0))
 
     # Draw waterlevel
-    pygame.draw.rect(window, darkBlue, (0, (waterLevel*height), width, height))
+    waterrect.height = waterLevel*height
+    waterrect.bottom = height
+    window.blit(water, waterrect)
 
     # Draw fish
-    fish.update()
+    fish.update(waterrect)
     window.blit(fish.image, fish.rect.topleft)
 
     # Actually draw it to the screen

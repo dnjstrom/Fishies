@@ -18,23 +18,20 @@ class Fish(pygame.sprite.Sprite):
     self.max_distance = 200
     self.min_distance = 50
     self.max_angle = math.pi/4
-    self.speed = 3
-    
+    self.step_size = 3
+
     self.randomize_target()
 
   @property
   def position(self):
-    return Vector(self.rect.centerx, self.rect.centery)
+    return Vector(self.rect.left, self.rect.top)
 
   @position.setter
   def position(self, v):
-    self.rect.center = (v.x, v.y)
+    self.rect.topleft = (v.x, v.y)
 
   def set_target(self, x, y):
     self.target = Vector(x, y)
-
-  def get_position(self):
-    return Vector(self.rect.centerx, self.rect.centery)
 
   def randomize_target(self):
     '''
@@ -42,29 +39,45 @@ class Fish(pygame.sprite.Sprite):
     '''
     length = random.randint(self.min_distance, self.max_distance)
     angle = random.uniform(-self.max_angle, self.max_angle)
-    self.target += Vector.make(self.target.angle(), length).rotate(angle)
+    self.target += Vector.make(self.get_direction().angle, length).rotate(angle)
 
-  def get_direction(self, target):
-    position = Vector(self.rect.centerx, self.rect.centery)
-    dist = target - position
-    return dist.normalize()
+  def get_direction(self):
+    return self.target - self.position
 
   def distance_to_target(self):
-    return (self.target - self.get_position()).length()
+    return self.get_direction().length
 
   def move(self, dx, dy):
     self.position += Vector(dx, dy)
 
-  def update(self):
-    self.dir = self.get_direction(self.target)
-    if self.dir:
-      if self.distance_to_target() < self.speed:
-        self.position = self.target
-        self.randomize_target()
-      else:
-        dx = (self.dir[0] * self.speed)
-        dy = (self.dir[1] * self.speed)
-        self.move(dx, dy)
+  def update(self, bounds):
+    # Check top bound
+    if self.rect.top < bounds.top:
+      self.rect.top = bounds.top
+      self.target = self.position + self.get_direction().flipy()
+
+    # Check right bound
+    if self.rect.right > bounds.right:
+      self.rect.right = bounds.right
+      self.target = self.position + self.get_direction().flipx()
+
+    # Check bottom bound
+    if self.rect.bottom > bounds.bottom:
+      self.rect.bottom = bounds.bottom
+      self.target = self.position + self.get_direction().flipy()
+
+    # Check left bound
+    if self.rect.left < bounds.left:
+      self.rect.left = bounds.left
+      self.target = self.position + self.get_direction().flipx()
+
+    # Choose new target if close enough
+    if self.distance_to_target() < self.step_size :
+      self.randomize_target()
+
+    # Update position
+    target_step = self.get_direction().normalize(self.step_size)
+    self.position += target_step
 
 
 def test_fish():
