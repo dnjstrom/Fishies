@@ -29,18 +29,10 @@ def main():
 
   fish = Fish()
 
-
   running = True
-  timer = 60
 
   while running:
     clock.tick(30)
-    timer -= 1
-
-    if timer <= 0:
-      fish.randomize_target()
-      timer = 60
-
 
     for event in pygame.event.get(): 
       if event.type == QUIT: 
@@ -58,13 +50,13 @@ def main():
           print event
 
     # Draw background
-    fish.update()
     window.blit(background, (0,0))
 
     # Draw waterlevel
     pygame.draw.rect(window, darkBlue, (0, (waterLevel*height), width, height))
 
     # Draw fish
+    fish.update()
     window.blit(fish.image, fish.rect.topleft)
 
     # Actually draw it to the screen

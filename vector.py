@@ -31,12 +31,20 @@ class Vector(object):
     else:
       raise IndexError("Index out of bounds: " + str(key))
 
+  @classmethod
+  def make(cls, angle, length):
+    x = length * math.cos(angle)
+    y = length * math.sin(angle)
+    return cls(x, y)
 
   def length(self):
     return math.sqrt(self.x**2 + self.y**2)
 
   def angle(self):
-    return math.atan(self.y / self.x)
+    if self.y == 0 and self.x == 0:
+      return 0
+    else:
+      return math.atan(self.y / self.x)
 
   def normalize(self):
     l = self.length()
@@ -66,15 +74,21 @@ def test_vector():
   v = Vector(3,4)
   print v
   print v.x
+  print v.angle()
+  print "#####"
   w = Vector(1,2)
   print v+w
   print v-w
   print v.length()
   print v.normalize().length()
   print w.normalize().length()
+  print w.angle()
+  print "#####"
   y = Vector(1,0)
   print y
   print y.rotate(math.pi/2)
+  print Vector.make(math.pi, 5)
+  print y.angle()
 
 if __name__ == "__main__":
   test_vector()

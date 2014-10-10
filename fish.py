@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
 import pygame
-from random import randint
+import math
+import random
+
 from vector import Vector
 
 # debug
@@ -12,10 +14,13 @@ class Fish(pygame.sprite.Sprite):
   def __init__(self):
     self.image = pygame.image.load('img/fish.png').convert_alpha()
     self.rect = self.image.get_rect()
-    self.target = Vector(1,1)
-    self.max_distance = 100
-    self.min_distance = 10
-    self.speed = 5
+    self.target = Vector(0,0)
+    self.max_distance = 200
+    self.min_distance = 50
+    self.max_angle = math.pi/4
+    self.speed = 3
+    
+    self.randomize_target()
 
   @property
   def position(self):
@@ -35,9 +40,9 @@ class Fish(pygame.sprite.Sprite):
     '''
     Randomize a position within window and writes it to target position.
     '''
-    dx = randint(self.min_distance, self.max_distance)
-    dy = randint(self.min_distance, self.max_distance)
-    self.set_target(self.rect.centerx+dx, self.rect.centery+dy)
+    length = random.randint(self.min_distance, self.max_distance)
+    angle = random.uniform(-self.max_angle, self.max_angle)
+    self.target += Vector.make(self.target.angle(), length).rotate(angle)
 
   def get_direction(self, target):
     position = Vector(self.rect.centerx, self.rect.centery)
@@ -55,6 +60,7 @@ class Fish(pygame.sprite.Sprite):
     if self.dir:
       if self.distance_to_target() < self.speed:
         self.position = self.target
+        self.randomize_target()
       else:
         dx = (self.dir[0] * self.speed)
         dy = (self.dir[1] * self.speed)
