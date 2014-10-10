@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-from math import sqrt
+import math
+
+from pdb import set_trace
 
 class Vector(object):
   """A very basic 2D vector class"""
@@ -31,17 +33,33 @@ class Vector(object):
 
 
   def length(self):
-    return sqrt(self.x**2 + self.y**2)
+    return math.sqrt(self.x**2 + self.y**2)
+
+  def angle(self):
+    return math.atan(self.y / self.x)
 
   def normalize(self):
     l = self.length()
     if l == 0:
-      return None
+      return None # throw error instead?
     else:
       return Vector(self.x / l, self.y / l)
 
   def get_point(self):
     return (self.x, self.y)
+
+  def rotate(self, angle):
+    l = self.length()
+    if l == 0:
+      return self.copy()
+    else:
+      a = self.angle() + angle
+      x = l * math.cos(a)
+      y = l * math.sin(a)
+      return Vector(x, y)
+
+  def copy(self):
+    return Vector(self.x, self.y)
 
 
 def test_vector():
@@ -54,6 +72,9 @@ def test_vector():
   print v.length()
   print v.normalize().length()
   print w.normalize().length()
+  y = Vector(1,0)
+  print y
+  print y.rotate(math.pi/2)
 
 if __name__ == "__main__":
   test_vector()

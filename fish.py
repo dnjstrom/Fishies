@@ -12,9 +12,9 @@ class Fish(pygame.sprite.Sprite):
   def __init__(self):
     self.image = pygame.image.load('img/fish.png').convert_alpha()
     self.rect = self.image.get_rect()
-    self.target = Vector(0,0)
+    self.target = Vector(1,1)
     self.max_distance = 100
-    self.min_distance = 0
+    self.min_distance = 10
     self.speed = 5
 
   @property
