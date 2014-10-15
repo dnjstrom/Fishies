@@ -8,6 +8,8 @@ from fish import Fish
 
 from pygame.locals import *
 
+from pdb import set_trace
+
 pygame.init()
 
 brightBlue = pygame.Color(0, 0, 255)
@@ -31,7 +33,9 @@ def main():
 
   waterLevel = 1
 
-  fish = Fish()
+  fishies = [
+    Fish()
+  ]
 
   running = True
 
@@ -48,6 +52,8 @@ def main():
         elif event.key == K_DOWN:
           if waterLevel > 0:
             waterLevel -= 0.01
+        elif event.key == K_SPACE:
+          set_trace()
         else:
           print event
 
@@ -60,8 +66,9 @@ def main():
     window.blit(water, waterrect)
 
     # Draw fish
-    fish.update(waterrect)
-    window.blit(fish.image, fish.rect.topleft)
+    for fish in fishies:
+      fish.update(waterrect)
+      window.blit(fish.image, fish.rect.topleft)
 
     # Actually draw it to the screen
     pygame.display.flip()

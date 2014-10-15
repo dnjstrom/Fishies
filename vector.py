@@ -69,6 +69,12 @@ class Vector(object):
   def flipy(self):
     return Vector(self.x, -self.y)
 
+  def set_x(self, value):
+    return Vector(value, self.y)
+
+  def set_y(self, value):
+    return Vector(self.x, value)
+
 
 def test_vector():
   print "%s | %s" % (0,Vector(1,0).angle)
