@@ -16,8 +16,9 @@ class Fish(pygame.sprite.Sprite):
     self.rect = self.image.get_rect()
     self.direction = Vector(3,1)
     self.position = Vector(0, 0)
-    self.MAX_ANGLE = math.pi/8
-    self.step_size = 10
+    self.MAX_ANGLE = math.pi/16
+    self.step_size = random.randint(1, 4)
+    self.delay = 0
 
     self.randomize_direction()
 
@@ -25,62 +26,72 @@ class Fish(pygame.sprite.Sprite):
     self.direction = Vector(x, y)
 
   def randomize_direction(self):
-    '''
-    Randomize a position within window and writes it to direction position.
-    '''
-    component_y = random.uniform(-self.MAX_ANGLE, self.MAX_ANGLE)
-    self.direction = self.direction.set_y(component_y).normalize()
+    random_angle = random.uniform(-self.MAX_ANGLE, self.MAX_ANGLE)
+    self.direction = self.direction.rotate(random_angle).normalize()
 
   def move(self, dx, dy):
     self.position += Vector(dx, dy)
 
+  def flatten_direction(self):
+    deg = math.degrees(self.direction.angle)
+
+    while deg < 0:
+      deg += 360
+
+    if deg > 90 and deg < 270:
+      self.direction = Vector(-1, 0)
+    else:
+      self.direction = Vector(1, 0)
+
+
   def update(self, bounds):
+    if bounds.height <= self.rect.height:
+      self.flatten_direction()
+      self.position = self.position.set_y(bounds.bottom - self.rect.height)
+
+    if self.delay != 0:
+      self.delay -= 1
+      return # Quit early
+    else:
+      direction_step = self.direction.normalize(self.step_size)
+      self.position += direction_step
+      self.rect.top = round(self.position.y)
+      self.rect.left = round(self.position.x)
+
+
     # Check top bound
-    if self.rect.top < bounds.top:
+    if self.rect.top < bounds.top and bounds.height > self.rect.height:
       self.position = self.position.set_y(bounds.top)
+      self.randomize_direction()
       self.direction = self.direction.set_y(abs(self.direction.y))
 
-      #self.direction = self.direction.rotate(random.uniform(-self.MAX_ANGLE, self.MAX_ANGLE))
-
-    # Check right bound
-    if self.rect.left > bounds.right:
-      self.position = self.position.set_x(bounds.right)
-      self.direction = self.direction.flipx()
-      self.randomize_direction()
-      self.position = self.position.set_y(random.randint(bounds.top, bounds.bottom - self.rect.height))
-      self.position = self.position.set_x(random.choice([0-self.rect.width, bounds.right]))
-      self.speed = random.randint(2, 5)
-
-
     # Check bottom bound
-    if self.rect.bottom > bounds.bottom:
+    if self.rect.bottom > bounds.bottom and bounds.height > self.rect.height:
       self.position = self.position.set_y(bounds.bottom - self.rect.height)
       self.direction = self.direction.set_y(-abs(self.direction.y))
-      #self.direction = self.direction.rotate(random.uniform(-self.MAX_ANGLE, self.MAX_ANGLE))
-
-    # Check left bound
-    if self.rect.right < bounds.left:
-      self.position = self.position.set_x(bounds.left)
-      self.direction = self.direction.flipx()
       self.randomize_direction()
-      self.position = self.position.set_y(random.randint(bounds.top, bounds.bottom - self.rect.height))
-      self.position = self.position.set_x(random.choice([0-self.rect.width, bounds.right]))
-      self.speed = random.randint(2, 5)
 
+    # Check right and left bound
+    if self.rect.left > bounds.right or self.rect.right < bounds.left:
+      if bounds.height < self.rect.height:
+        self.position = self.position.set_y(bounds.bottom - self.rect.height)
+      else:
+        self.position = self.position.set_y(random.randint(bounds.top, bounds.bottom - self.rect.height))
 
-    # Choose new direction if close enough
-   # if self.distance_to_direction() < self.step_size :
-    #  self.randomize_direction()
+      self.position = self.position.set_x(random.choice([-self.rect.width, bounds.right]))
 
-    # Update position
-    #direction_step = self.get_direction().normalize(self.step_size)
-    direction_step = self.direction.normalize(self.step_size)
-    print "step: %s" % direction_step
-    print "pos:  %s" % self.position
-    self.position += direction_step
+      # Flip direction depending on what edge we're at
+      if self.position.x == -self.rect.width:
+        self.direction = Vector(1, 0)
+      else:
+        self.direction = Vector(-1, 0)
 
-    self.rect.top = round(self.position.y)
-    self.rect.left = round(self.position.x)
+      if bounds.height > self.rect.height:
+        self.randomize_direction()
+
+      self.step_size = random.randint(1, 4)
+      self.delay = random.randint(15, 30*3)
+
 
 
 def test_fish():

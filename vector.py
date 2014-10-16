@@ -78,13 +78,13 @@ class Vector(object):
 
 def test_vector():
   print "%s | %s" % (0,Vector(1,0).angle)
-  print "%s | %s" % (math.pi*0.25,Vector(1,1).angle)
-  print "%s | %s" % (math.pi*0.50,Vector(0,1).angle)
-  print "%s | %s" % (math.pi*0.75,Vector(-1,1).angle)
-  print "%s | %s" % (math.pi*1.00,Vector(-1,0).angle)
-  print "%s | %s" % (math.pi*1.25,Vector(-1,-1).angle)
-  print "%s | %s" % (math.pi*1.50,Vector(0,-1).angle)
-  print "%s | %s" % (math.pi*1.75,Vector(1,-1).angle)
+  print "%s | %s" % (math.degrees(math.pi*0.25),Vector(1,1).angle)
+  print "%s | %s" % (math.degrees(math.pi*0.50),Vector(0,1).angle)
+  print "%s | %s" % (math.degrees(math.pi*0.75),Vector(-1,1).angle)
+  print "%s | %s" % (math.degrees(math.pi*1.00),Vector(-1,0).angle)
+  print "%s | %s" % (math.degrees(math.pi*1.25),Vector(-1,-1).angle)
+  print "%s | %s" % (math.degrees(math.pi*1.50),Vector(0,-1).angle)
+  print "%s | %s" % (math.degrees(math.pi*1.75),Vector(1,-1).angle)
 
 if __name__ == "__main__":
   test_vector()

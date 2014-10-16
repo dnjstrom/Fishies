@@ -16,7 +16,7 @@ brightBlue = pygame.Color(0, 0, 255)
 darkBlue = pygame.Color(0, 0, 180)
 
 def main():
-  window = pygame.display.set_mode((300, 300))
+  window = pygame.display.set_mode((300, 600))
   pygame.display.set_caption('Fishies')
   width, height = window.get_size()
 
@@ -33,9 +33,10 @@ def main():
 
   waterLevel = 1
 
-  fishies = [
-    Fish()
-  ]
+  fishies = []
+
+  for x in xrange(1,50):
+    fishies.append(Fish())
 
   running = True
 
