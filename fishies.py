@@ -3,6 +3,9 @@
 import sys, pygame
 import random
 
+import time
+import serial
+
 from vector import Vector
 from fish import Fish
 
@@ -10,12 +13,19 @@ from pygame.locals import *
 
 from pdb import set_trace
 
+
 pygame.init()
 
 brightBlue = pygame.Color(0, 0, 255)
 darkBlue = pygame.Color(0, 0, 180)
 
+increment = 0.001
+delay = 1000
+
 def main():
+  # Listen to arduino
+  ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0.001) 
+
   window = pygame.display.set_mode((300, 600))
   pygame.display.set_caption('Fishies')
   width, height = window.get_size()
@@ -27,11 +37,11 @@ def main():
   water.fill(darkBlue)
   waterrect = water.get_rect()
 
-  pygame.key.set_repeat(50, 50)
+  pygame.key.set_repeat(25, 25)
 
   clock = pygame.time.Clock()
 
-  waterLevel = 1
+  waterlevel = 1
 
   fishies = []
 
@@ -40,19 +50,29 @@ def main():
 
   running = True
 
+  latest_message = 0
+
   while running:
     clock.tick(30)
+    millis = int(round(time.time() * 1000))
+
+    for line in ser:
+      waterlevel -= increment
+      latest_message = millis
+
+    if waterlevel < 1 and latest_message < millis - delay:
+      waterlevel += increment
 
     for event in pygame.event.get(): 
       if event.type == QUIT: 
         sys.exit(0)
       elif event.type == KEYDOWN:
         if event.key == K_UP:
-          if waterLevel < 1:
-            waterLevel += 0.01
+          if waterlevel < 1:
+            waterlevel += increment
         elif event.key == K_DOWN:
-          if waterLevel > 0:
-            waterLevel -= 0.01
+          if waterlevel > 0:
+            waterlevel -= increment
         elif event.key == K_SPACE:
           set_trace()
         else:
@@ -62,7 +82,7 @@ def main():
     window.blit(background, (0,0))
 
     # Draw waterlevel
-    waterrect.height = waterLevel*height
+    waterrect.height = waterlevel*height
     waterrect.bottom = height
     window.blit(water, waterrect)
 
