@@ -16,7 +16,7 @@ from pdb import set_trace
 
 pygame.init()
 
-brightBlue = pygame.Color(0, 0, 255)
+black = pygame.Color(0, 0, 0)
 darkBlue = pygame.Color(0, 0, 180)
 
 increment = 0.001
@@ -24,14 +24,18 @@ delay = 1000
 
 def main():
   # Listen to arduino
-  ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0.001) 
+  try:
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0.001) 
+  except Exception, e:
+    print "Unable to open serial port!"
+    ser = None
 
   window = pygame.display.set_mode((300, 600))
   pygame.display.set_caption('Fishies')
   width, height = window.get_size()
 
   background = pygame.Surface(window.get_size()).convert()
-  background.fill(brightBlue)
+  background.fill(black)
 
   water = pygame.Surface(window.get_size()).convert()
   water.fill(darkBlue)
@@ -56,9 +60,10 @@ def main():
     clock.tick(30)
     millis = int(round(time.time() * 1000))
 
-    for line in ser:
-      waterlevel -= increment
-      latest_message = millis
+    if ser is not None:
+      for line in ser:
+        waterlevel -= increment
+        latest_message = millis
 
     if waterlevel < 1 and latest_message < millis - delay:
       waterlevel += increment
@@ -69,10 +74,12 @@ def main():
       elif event.type == KEYDOWN:
         if event.key == K_UP:
           if waterlevel < 1:
-            waterlevel += increment
+            waterlevel += increment*10
+            latest_message = millis
         elif event.key == K_DOWN:
           if waterlevel > 0:
-            waterlevel -= increment
+            waterlevel -= increment*10
+            latest_message = millis
         elif event.key == K_SPACE:
           set_trace()
         else:
