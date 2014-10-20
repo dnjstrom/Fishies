@@ -23,6 +23,9 @@ class Vector(object):
   def __sub__(self, other):
     return self + (-other)
 
+  def __eq__(self, other):
+    return self.x == other.x and self.y == other.y
+
   def __getitem__(self, key):
     if key == 0:
       return self.x
@@ -85,6 +88,8 @@ def test_vector():
   print "%s | %s" % (math.degrees(math.pi*1.25),Vector(-1,-1).angle)
   print "%s | %s" % (math.degrees(math.pi*1.50),Vector(0,-1).angle)
   print "%s | %s" % (math.degrees(math.pi*1.75),Vector(1,-1).angle)
+
+  print Vector(1,0).rotate(math.pi).rotate(-math.pi) == Vector(1,0)
 
 if __name__ == "__main__":
   test_vector()

@@ -12,12 +12,15 @@ from pdb import set_trace
 class Fish(pygame.sprite.Sprite):
 
   def __init__(self):
-    self.image = pygame.image.load('img/fish.png').convert_alpha()
+    self.unflipped = pygame.image.load('img/fish2.png').convert_alpha()
+    self.flipped = pygame.transform.flip(self.unflipped, True, False)
+    self.image = self.unflipped
+
     self.rect = self.image.get_rect()
     self.direction = Vector(3,1)
     self.position = Vector(0, 0)
     self.MAX_ANGLE = math.pi/16
-    self.step_size = random.randint(1, 4)
+    self.step_size = random.randint(1, 3)
     self.delay = 0
 
     self.randomize_direction()
@@ -32,21 +35,21 @@ class Fish(pygame.sprite.Sprite):
   def move(self, dx, dy):
     self.position += Vector(dx, dy)
 
-  def flatten_direction(self):
+  def general_direction(self):
     deg = math.degrees(self.direction.angle)
 
     while deg < 0:
       deg += 360
 
     if deg > 90 and deg < 270:
-      self.direction = Vector(-1, 0)
+      return Vector(-1, 0)
     else:
-      self.direction = Vector(1, 0)
+      return Vector(1, 0)
 
 
   def update(self, bounds):
     if bounds.height <= self.rect.height:
-      self.flatten_direction()
+      self.direction = self.general_direction()
       self.position = self.position.set_y(bounds.bottom - self.rect.height)
 
     if self.delay != 0:
@@ -89,8 +92,14 @@ class Fish(pygame.sprite.Sprite):
       if bounds.height > self.rect.height:
         self.randomize_direction()
 
-      self.step_size = random.randint(1, 4)
+      self.step_size = random.randint(1, 3)
       self.delay = random.randint(15, 30*3)
+
+      if self.general_direction() == Vector(1, 0):
+        self.image = self.unflipped
+      else:
+        self.image = self.flipped
+
 
 
 
