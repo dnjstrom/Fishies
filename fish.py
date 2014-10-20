@@ -12,8 +12,11 @@ from pdb import set_trace
 class Fish(pygame.sprite.Sprite):
 
   def __init__(self):
-    self.unflipped = pygame.image.load('img/fish2.png').convert_alpha()
+    self.unflipped = pygame.image.load('img/fish_happy.png').convert_alpha()
     self.flipped = pygame.transform.flip(self.unflipped, True, False)
+    self.unflipped_sad = pygame.image.load('img/fish_sad.png').convert_alpha()
+    self.unflipped_sad = pygame.transform.flip(self.unflipped_sad, False, True)
+    self.flipped_sad = pygame.transform.flip(self.unflipped_sad, True, False)
     self.image = self.unflipped
 
     self.rect = self.image.get_rect()
@@ -81,7 +84,7 @@ class Fish(pygame.sprite.Sprite):
       else:
         self.position = self.position.set_y(random.randint(bounds.top, bounds.bottom - self.rect.height))
 
-      self.position = self.position.set_x(random.choice([-self.rect.width, bounds.right]))
+      self.position = self.position.set_x(random.choice([bounds.left-self.rect.width, bounds.right]))
 
       # Flip direction depending on what edge we're at
       if self.position.x == -self.rect.width:
@@ -95,12 +98,15 @@ class Fish(pygame.sprite.Sprite):
       self.step_size = random.randint(1, 3)
       self.delay = random.randint(15, 30*3)
 
-      if self.general_direction() == Vector(1, 0):
-        self.image = self.unflipped
-      else:
-        self.image = self.flipped
+    if self.general_direction() == Vector(1, 0):
+      img = "unflipped"
+    else:
+      img = "flipped"
 
+    if bounds.height <= self.rect.height:
+      img += "_sad"
 
+    self.image = getattr(self, img)
 
 
 def test_fish():

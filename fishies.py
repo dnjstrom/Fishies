@@ -46,6 +46,7 @@ def main():
   clock = pygame.time.Clock()
 
   waterlevel = 1
+  waterwidth = 1
 
   fishies = []
 
@@ -73,30 +74,48 @@ def main():
         sys.exit(0)
       elif event.type == KEYDOWN:
         if event.key == K_UP:
-          if waterlevel < 1:
-            waterlevel += increment*10
-            latest_message = millis
+          waterlevel += increment*10
+          latest_message = millis
         elif event.key == K_DOWN:
-          if waterlevel > 0:
-            waterlevel -= increment*10
-            latest_message = millis
+          waterlevel -= increment*10
+          latest_message = millis
+        elif event.key == K_LEFT:
+          waterwidth -= increment*10
+        elif event.key == K_RIGHT:
+          waterwidth += increment*10
         elif event.key == K_SPACE:
           set_trace()
         else:
           print event
+
+
+    if waterlevel > 1:
+      waterlevel = 1
+    elif waterlevel < 0:
+      waterlevel = 0
+
 
     # Draw background
     window.blit(background, (0,0))
 
     # Draw waterlevel
     waterrect.height = waterlevel*height
+    if waterrect.height < fishies[0].rect.height:
+      waterrect.height = fishies[0].rect.height
     waterrect.bottom = height
-    window.blit(water, waterrect)
+    waterrect.width = width * waterwidth
+    bgmod = pygame.transform.scale(water, (waterrect.width,waterrect.height))
+
 
     # Draw fish
     for fish in fishies:
       fish.update(waterrect)
-      window.blit(fish.image, fish.rect.topleft)
+      pos = fish.rect.copy()
+      pos.left -= waterrect.left
+      pos.top -= waterrect.top
+      bgmod.blit(fish.image, pos.topleft)
+
+    window.blit(bgmod, waterrect)
 
     # Actually draw it to the screen
     pygame.display.flip()
