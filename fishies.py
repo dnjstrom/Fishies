@@ -32,7 +32,7 @@ def main():
 
   window = pygame.display.set_mode(pygame.display.list_modes()[0], pygame.FULLSCREEN)
   pygame.display.set_caption('Fishies')
-  width, height = window.get_size()
+  width, height = window.get_size()[::-1]
 
   background = pygame.Surface(window.get_size()).convert()
   background.fill(black)
