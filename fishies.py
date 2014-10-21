@@ -30,7 +30,7 @@ def main():
     print "Unable to open serial port!"
     ser = None
 
-  window = pygame.display.set_mode((300, 600))
+  window = pygame.display.set_mode(pygame.display.list_modes()[0], pygame.FULLSCREEN)
   pygame.display.set_caption('Fishies')
   width, height = window.get_size()
 
@@ -46,7 +46,7 @@ def main():
   clock = pygame.time.Clock()
 
   waterlevel = 1
-  waterwidth = 1
+  waterwidth = 0.3
 
   fishies = []
 
@@ -80,9 +80,11 @@ def main():
           waterlevel -= increment*10
           latest_message = millis
         elif event.key == K_LEFT:
-          waterwidth -= increment*10
+          waterwidth -= increment
         elif event.key == K_RIGHT:
-          waterwidth += increment*10
+          waterwidth += increment
+        elif event.key == K_ESCAPE:
+          running = False
         elif event.key == K_SPACE:
           set_trace()
         else:
