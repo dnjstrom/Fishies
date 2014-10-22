@@ -50,7 +50,7 @@ def main():
 
   fishies = []
 
-  for x in xrange(1,25):
+  for x in xrange(1,35):
     fishies.append(Fish())
 
   running = True
