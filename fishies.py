@@ -113,6 +113,12 @@ def main():
     waterrect.height = waterlevel*height
     if waterrect.height < fishies[0].rect.height:
       waterrect.height = fishies[0].rect.height
+      for fish in fishies:
+        fish.dead = True
+    else:
+      for fish in fishies:
+        fish.dead = False
+
     waterrect.bottom = height
     waterrect.width = width * waterwidth
     bgmod = pygame.transform.scale(water, (waterrect.width,waterrect.height))

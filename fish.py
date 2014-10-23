@@ -23,10 +23,28 @@ class Fish(pygame.sprite.Sprite):
     self.direction = Vector(3,1)
     self.position = Vector(0, 0)
     self.MAX_ANGLE = math.pi/16
-    self.step_size = random.randint(1, 3)
+    self.speed = self._speed = random.randint(1, 3)
     self.delay = 0
 
+    self._dead = False
+
+
     self.randomize_direction()
+
+
+  @property
+  def dead(self):
+      return self._dead
+
+  @dead.setter
+  def dead(self, isDead):
+    self._dead = isDead
+
+    if isDead:
+      self.speed = random.uniform(0.1, 0.5)
+    else:
+      self.speed = self._speed
+  
 
   def set_direction(self, x, y):
     self.direction = Vector(x, y)
@@ -59,7 +77,7 @@ class Fish(pygame.sprite.Sprite):
       self.delay -= 1
       return # Quit early
     else:
-      direction_step = self.direction.normalize(self.step_size)
+      direction_step = self.direction.normalize(self.speed)
       self.position += direction_step
       self.rect.top = round(self.position.y)
       self.rect.left = round(self.position.x)
@@ -95,7 +113,7 @@ class Fish(pygame.sprite.Sprite):
       if bounds.height > self.rect.height:
         self.randomize_direction()
 
-      self.step_size = random.randint(1, 3)
+      self.speed = self._speed = random.randint(1, 3)
       self.delay = random.randint(15, 30*3)
 
     if self.general_direction() == Vector(1, 0):
