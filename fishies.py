@@ -32,6 +32,7 @@ delay = 1000
 def main():
   # Listen to arduino
   try:
+    # MAKE SURE THE SERIAL PORT BELOW IS THE ONE YOU'VE CONNECTED THE ARDUINO TO.
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0.001) 
   except Exception, e:
     print "Unable to open serial port!"
