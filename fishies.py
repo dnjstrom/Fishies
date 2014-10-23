@@ -1,5 +1,12 @@
 #!/usr/bin/python
 
+"""
+This program displays an aquarium visualization with moving fishes.
+
+You start the program on the command line by: "pyghon fishies.py" or
+simply "./fishies.py".
+"""
+
 import sys, pygame
 import random
 
@@ -30,9 +37,11 @@ def main():
     print "Unable to open serial port!"
     ser = None
 
-  window = pygame.display.set_mode(pygame.display.list_modes()[0], pygame.FULLSCREEN)
+  window_size = pygame.display.list_modes()[0]
+  print "Window size: %sx%s" % window_size
+  window = pygame.display.set_mode(window_size, pygame.FULLSCREEN)
   pygame.display.set_caption('Fishies')
-  width, height = window.get_size()[::-1]
+  width, height = window_size
 
   background = pygame.Surface(window.get_size()).convert()
   background.fill(black)

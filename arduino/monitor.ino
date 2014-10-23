@@ -1,32 +1,43 @@
-/*
-  Blink
-  Turns on an LED on for one second, then off for one second, repeatedly.
- 
-  This example code is in the public domain.
- */
- 
-// Pin 13 has an LED connected on most Arduino boards.
-// give it a name:
-int led = 13;
-int interval = 40;
-int i = 200;
+// This program listens to a button and on press sends
+// data continuously to the serial port for a set duration.
 
-// the setup routine runs once when you press reset:
-void setup() {                
-  // initialize the digital pin as an output.
-  pinMode(led, OUTPUT);     
+// Pins
+int buttonPin = 7;
+int pumpPin = 5;
+
+// Input
+int reading;
+
+// Delay
+long time = 0;
+long debounce = 1000; //3000
+int signalInterval = 20; //40
+int duration = 25000;
+
+void setup() {
+  pinMode(buttonPin, INPUT);
+  digitalWrite(buttonPin, HIGH); // Turn on internal resistor
+  
+  pinMode(pumpPin, OUTPUT);
+  digitalWrite(pumpPin, LOW);  // start by turning the pump off
+  
   Serial.begin(9600);
 }
 
-// the loop routine runs over and over again forever:
 void loop() {
-  while(i > 0) {
-    i--;
-    digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
-    Serial.println('DEC');
-    delay(interval/2);               // wait for a second
-    digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
-    delay(interval/2);               // wait for a second
-  }
+  reading = digitalRead(buttonPin);
   
+  if (reading == LOW && millis() > time + debounce) {
+    time = millis();
+    
+    digitalWrite(pumpPin, HIGH);  // turn the pump on
+    
+    //send signals to the visualization
+    while (millis() < time + duration) {
+      Serial.println('DEC');
+      delay(signalInterval);
+    }
+    
+    digitalWrite(pumpPin, LOW);  // turn the pump off
+  }
 }
