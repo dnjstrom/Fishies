@@ -113,6 +113,7 @@ def main():
     waterrect.height = waterlevel*height
     if waterrect.height < fishies[0].rect.height:
       waterrect.height = fishies[0].rect.height
+      # Ugly as fuck... but when in need...
       for fish in fishies:
         fish.dead = True
     else:
